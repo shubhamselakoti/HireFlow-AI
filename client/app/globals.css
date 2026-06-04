@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 250 100% 98%;
+    --foreground: 255 35% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 255 35% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 255 35% 15%;
+    --primary: 255 100% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 250 60% 95%;
+    --secondary-foreground: 255 35% 25%;
+    --muted: 250 40% 94%;
+    --muted-foreground: 255 20% 50%;
+    --accent: 250 60% 94%;
+    --accent-foreground: 255 35% 20%;
+    --destructive: 355 80% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 250 50% 90%;
+    --input: 250 50% 92%;
+    --ring: 255 70% 60%;
+    --radius: 1rem;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-clay-bg text-clay-text;
+    font-family: 'Nunito', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+  }
+}
+
+@layer components {
+  /* ── Clay Card ──────────────────────────────────────────── */
+  .clay-card {
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+      0 8px 32px rgba(100, 80, 200, 0.10),
+      0 2px 8px rgba(100, 80, 200, 0.06),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
+  }
+
+  .clay-card-sm {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+      0 4px 16px rgba(100, 80, 200, 0.08),
+      0 1px 4px rgba(100, 80, 200, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .clay-card-lg {
+    background: #ffffff;
+    border-radius: 32px;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+      0 12px 48px rgba(100, 80, 200, 0.14),
+      0 4px 16px rgba(100, 80, 200, 0.08),
+      inset 0 2px 0 rgba(255, 255, 255, 0.95);
+  }
+
+  /* ── Clay Button ────────────────────────────────────────── */
+  .clay-btn {
+    border-radius: 50px;
+    box-shadow: 0 4px 14px rgba(100, 80, 200, 0.25);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    font-weight: 700;
+  }
+
+  .clay-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 6px rgba(100, 80, 200, 0.18);
+  }
+
+  .clay-btn-primary {
+    @apply clay-btn;
+    background: linear-gradient(135deg, #6D4AFF, #9F7AEA);
+    color: white;
+  }
+
+  .clay-btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(100, 80, 200, 0.40);
+    transform: translateY(-1px);
+  }
+
+  .clay-btn-outline {
+    @apply clay-btn;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(109, 74, 255, 0.3);
+    color: #6D4AFF;
+  }
+
+  .clay-btn-outline:hover {
+    background: rgba(232, 224, 255, 0.8);
+  }
+
+  /* ── Clay Input ─────────────────────────────────────────── */
+  .clay-input {
+    border-radius: 14px;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+    border: 1.5px solid rgba(200, 190, 240, 0.5);
+    background: rgba(255, 255, 255, 0.85);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    transition: all 0.2s ease;
+  }
+
+  .clay-input:focus {
+    outline: none;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04), 0 0 0 3px rgba(140, 100, 255, 0.18);
+    border-color: rgba(140, 100, 255, 0.5);
+  }
+
+  /* ── Skeleton Loader ────────────────────────────────────── */
+  .clay-skeleton {
+    background: linear-gradient(90deg, #ede8ff 25%, #f5f0ff 50%, #ede8ff 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    border-radius: 12px;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ── Clay Table ─────────────────────────────────────────── */
+  .clay-table {
+    @apply clay-card;
+    overflow: hidden;
+  }
+
+  .clay-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .clay-table th {
+    background: rgba(232, 224, 255, 0.5);
+    color: #7B6FA0;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    text-align: left;
+  }
+
+  .clay-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(232, 224, 255, 0.3);
+    color: #2D2250;
+    font-size: 14px;
+  }
+
+  .clay-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .clay-table tr:hover td {
+    background: rgba(232, 224, 255, 0.15);
+    transition: background 0.15s ease;
+  }
+
+  /* ── Sidebar ────────────────────────────────────────────── */
+  .clay-sidebar {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1.5px solid rgba(232, 224, 255, 0.6);
+    box-shadow: 4px 0 24px rgba(100, 80, 200, 0.06);
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: #7B6FA0;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .nav-item:hover {
+    background: rgba(232, 224, 255, 0.5);
+    color: #2D2250;
+  }
+
+  .nav-item.active {
+    background: linear-gradient(135deg, rgba(109, 74, 255, 0.12), rgba(159, 122, 234, 0.08));
+    color: #6D4AFF;
+    box-shadow: 0 2px 10px rgba(100, 80, 200, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(109, 74, 255, 0.15);
+  }
+
+  .nav-icon-bg {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── Stat Card ──────────────────────────────────────────── */
+  .stat-card {
+    @apply clay-card;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Badge Variants ─────────────────────────────────────── */
+  .badge-mint   { background: #D6F5E8; color: #1a7a4a; }
+  .badge-peach  { background: #FFE8D6; color: #a0430a; }
+  .badge-rose   { background: #FFD6E0; color: #a0143a; }
+  .badge-sky    { background: #D6EEFF; color: #0a4a7a; }
+  .badge-lavender { background: #E8E0FF; color: #4a2a9a; }
+  .badge-yellow { background: #FFF3D6; color: #7a5a0a; }
+
+  /* ── Scrollbar ──────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(109, 74, 255, 0.2); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(109, 74, 255, 0.35); }
+
+  /* ── Modal Backdrop ─────────────────────────────────────── */
+  .clay-modal-overlay {
+    background: rgba(45, 34, 80, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* ── Chart Container ────────────────────────────────────── */
+  .chart-card {
+    @apply clay-card;
+    padding: 24px;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #6D4AFF, #9F7AEA, #FF6B9D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-blob-lavender {
+    background: radial-gradient(ellipse at center, rgba(109, 74, 255, 0.15) 0%, transparent 70%);
+  }
+
+  .bg-blob-peach {
+    background: radial-gradient(ellipse at center, rgba(255, 150, 80, 0.15) 0%, transparent 70%);
+  }
+
+  .bg-blob-mint {
+    background: radial-gradient(ellipse at center, rgba(40, 200, 120, 0.12) 0%, transparent 70%);
+  }
+}
