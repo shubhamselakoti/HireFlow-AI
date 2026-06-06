@@ -82,7 +82,7 @@ export default function CandidatePortalPage() {
 
   const saveApplied = (ids: Set<string>) => {
     if (!lsKey) return;
-    try { localStorage.setItem(lsKey, JSON.stringify([...ids])); } catch {}
+    try { localStorage.setItem(lsKey, JSON.stringify(Array.from(ids))); } catch {}
   };
 
   // Load applied IDs from localStorage — keyed by this specific user
@@ -190,7 +190,7 @@ export default function CandidatePortalPage() {
 
       // Mark as applied locally — functional update avoids stale closure
       setAppliedJobIds((prev) => {
-        const next = new Set([...prev, applyingJob._id]);
+        const next = new Set(Array.from(prev).concat(applyingJob._id));
         saveApplied(next);
         return next;
       });
