@@ -10,10 +10,6 @@ import type { Candidate, Job } from '@/types';
 const SCORE_BADGE = (score: number) =>
   score >= 70 ? 'badge-mint' : score >= 40 ? 'badge-yellow' : 'badge-rose';
 
-
-  return url;
-};
-
 export default function CandidatesPage() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);

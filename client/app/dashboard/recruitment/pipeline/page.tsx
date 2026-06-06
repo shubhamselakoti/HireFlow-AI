@@ -288,7 +288,3 @@ export default function PipelinePage() {
     </div>
   );
 }
-
-/** Convert a Cloudinary URL to a forced-download URL */
-  return url;
-}
