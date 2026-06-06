@@ -72,7 +72,7 @@ export default function TopNav({ title, subtitle }: TopNavProps) {
         {/* Actions */}
         <div className="flex items-center gap-2">
           {/* Voice assistant */}
-          <button
+          {/* <button
             onClick={handleVoice}
             title="Voice Assistant"
             className={cn(
@@ -83,15 +83,15 @@ export default function TopNav({ title, subtitle }: TopNavProps) {
             )}
           >
             <Mic size={16} strokeWidth={2.2} />
-          </button>
+          </button> */}
 
           {/* Notifications */}
-          <button className="w-9 h-9 rounded-xl bg-white shadow-clay-sm flex items-center justify-center text-clay-muted hover:text-clay-text relative">
+          {/* <button className="w-9 h-9 rounded-xl bg-white shadow-clay-sm flex items-center justify-center text-clay-muted hover:text-clay-text relative">
             <Bell size={16} strokeWidth={2.2} />
             <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-clay-rose rounded-full flex items-center justify-center">
               <span className="text-[8px] font-800 text-red-500">3</span>
             </span>
-          </button>
+          </button> */}
         </div>
       </div>
     </header>
