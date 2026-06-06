@@ -1,136 +1,254 @@
-# HireFlow HRMS
+<div align="center">
 
-AI-powered Human Resource Management System built with Next.js 14, Node.js/Express, and MongoDB.
+<img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js" />
+<img src="https://img.shields.io/badge/Node.js-20-green?style=for-the-badge&logo=node.js" />
+<img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb" />
+<img src="https://img.shields.io/badge/Groq-LLaMA_3.1-orange?style=for-the-badge" />
+<img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript" />
 
-## Architecture
+# 🚀 HireFlow HRMS
+
+**AI-powered Human Resource Management System** — from hiring to payroll, in one beautiful claymorphic interface.
+
+[![View Live Demo](https://img.shields.io/badge/🌐_View_Live_Demo-6D4AFF?style=for-the-badge)](https://hireflow-ai-g3k7.onrender.com)
+[![API Health](https://img.shields.io/badge/⚡_API_Health-1D9E75?style=for-the-badge)](https://hireflow-ai-hqml.onrender.com/health)
+
+</div>
+
+---
+
+## ✨ What is HireFlow?
+
+HireFlow is a full-stack HRMS that handles the complete employee lifecycle — from the moment a candidate browses a job opening, through AI resume screening, interviews, hiring, onboarding, attendance, leave, payroll, and performance reviews.
+
+Built with a claymorphism design system, Next.js 14 App Router, Node.js/Express REST API, and MongoDB Atlas.
+
+---
+
+## 🏗️ Architecture
 
 ```
-hireflow/
-├── client/    → Next.js 14 frontend (deploy to Netlify)
-└── server/    → Node.js + Express API (deploy to Render)
+┌─────────────────────────────┐        ┌─────────────────────────────┐
+│         CLIENT              │        │          SERVER              │
+│  Next.js 14 (App Router)    │◄──────►│  Node.js + Express REST API │
+│  TypeScript + Tailwind CSS  │  HTTP  │  Mongoose ODM               │
+│  NextAuth v5 (JWT + OAuth)  │        │  JWT Authentication          │
+│  Zustand + React Hook Form  │        │  Multer + Cloudinary         │
+│  Recharts + Sonner          │        │  Nodemailer + Brevo SMTP     │
+│                             │        │                              │
+│  Deploy: Render (Node SSR)  │        │  Deploy: Render              │
+└─────────────────────────────┘        └──────────┬──────────────────┘
+                                                   │
+                              ┌────────────────────┼────────────────────┐
+                              │                    │                    │
+                    ┌─────────▼──────┐  ┌──────────▼──────┐  ┌────────▼────────┐
+                    │  MongoDB Atlas │  │   Groq LLaMA    │  │   Cloudinary    │
+                    │  (Database)    │  │   + HuggingFace │  │   (File Store)  │
+                    └────────────────┘  └─────────────────┘  └─────────────────┘
 ```
 
-## Quick Start
+---
 
-### 1. Server Setup
+## 🎯 Features
 
+### 🤖 AI-Powered Recruitment
+- **Bulk resume screening** — upload up to 20 PDFs at once; Groq + HuggingFace extract skills and score candidates 0–100 by job fit
+- **AI job description generator** — streaming SSE, generates complete JDs from a job title
+- **AI interviews** — browser-based voice interviews with Web Speech API transcription, per-answer Groq scoring, final skill scores
+- **Hire flow automation** — marking a candidate as Hired auto-creates Employee record, Onboarding checklist, User account, and sends credential email
+
+### 👥 Employee Management
+- Complete employee directory with search, filter, department grouping
+- Salary structure editor (Base + HRA + Allowances − Deductions)
+- Document upload via Cloudinary, avatar management
+- `firstname.lastname@hireflow.com` login identity generated on hire
+
+### 📅 Attendance & Leave
+- Clock in / clock out with daily records
+- Configurable leave policies (Casual, Sick, Annual, Maternity, Paternity, Unpaid) seeded automatically on first server start
+- Leave application with balance validation
+- Manager approval workflow with email notifications
+
+### 💰 Payroll
+- One-click monthly payroll run
+- Attendance-adjusted calculations
+- Payslips emailed automatically via Brevo SMTP
+- Historical payslip viewer for employees
+
+### 📊 Analytics & Performance
+- Recruitment funnel charts
+- Attendance trend graphs
+- Payroll cost summaries by department
+- Performance rating distributions
+- Goal tracking per employee
+
+---
+
+## 👤 User Roles
+
+| Role | Portal | Key Permissions |
+|------|--------|----------------|
+| `management_admin` | `/dashboard` | Full access — all modules, user role management, payroll |
+| `senior_manager` | `/manager` | Team attendance, leave approval, performance reviews (own team only) |
+| `hr_recruiter` | `/recruiter` | Jobs, AI screening, pipeline, interviews, onboarding |
+| `employee` | `/employee` | Own attendance, leave, payslips, performance, profile |
+| `candidate` | `/candidate-portal` | Browse jobs, apply, track applications, take AI interview |
+
+---
+
+## 🔄 Hiring Flow
+
+```
+Candidate applies (resume upload)
+        ↓
+AI screens resume → score 0–100
+        ↓
+HR advances through pipeline:
+Applied → Screened → Interview Scheduled → Interviewed → Offered → Hired
+        ↓
+On "Hired":
+  ✅ Employee record created
+  ✅ User account created (firstname.lastname@hireflow.com)
+  ✅ Temp password generated & hashed
+  ✅ Onboarding checklist created
+  ✅ Credentials email sent to candidate
+```
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend**
+- Next.js 14 App Router + TypeScript
+- Tailwind CSS (claymorphism design system)
+- NextAuth v5 (JWT sessions + Google OAuth)
+- Zustand, React Hook Form + Zod, Recharts, Sonner
+
+**Backend**
+- Node.js + Express + express-async-errors
+- Mongoose (MongoDB ODM)
+- bcryptjs + jsonwebtoken
+- Multer + pdf-parse, Nodemailer + Brevo SMTP
+
+**AI & Cloud**
+- Groq (LLaMA 3.1 8B) — JD generation, answer evaluation, HR chatbot
+- HuggingFace NER — skill extraction from resumes
+- Cloudinary — resume and document storage (streamed via backend proxy)
+- MongoDB Atlas — database
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+Node.js 20+, MongoDB Atlas, Cloudinary, Groq API key, Brevo SMTP, Google Cloud OAuth
+
+### Server
 ```bash
 cd server
 npm install
 cp .env.example .env
-# Fill in your .env values (see below)
-npm run dev
+npm run dev           # http://localhost:5000
 ```
 
-### 2. Client Setup
-
+### Client
 ```bash
 cd client
 npm install
 cp .env.local.example .env.local
-# Fill in your .env.local values
-npm run dev
+npm run dev           # http://localhost:3000
 ```
 
-Open http://localhost:3000
-
 ---
 
-## Environment Variables
+## ⚙️ Environment Variables
 
-### Server (`server/.env`)
+### Client — `client/.env.local`
 
-| Variable | Description | Where to get |
-|---|---|---|
-| `MONGO_URI` | MongoDB Atlas connection string | atlas.mongodb.com |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name | cloudinary.com/console |
-| `CLOUDINARY_API_KEY` | Cloudinary API key | cloudinary.com/console |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret | cloudinary.com/console |
-| `GROQ_API_KEY` | Groq LLM API key | console.groq.com |
-| `HF_API_KEY` | HuggingFace API token | huggingface.co/settings/tokens |
-| `BREVO_SMTP_USER` | Brevo SMTP login | brevo.com |
-| `BREVO_SMTP_PASS` | Brevo SMTP password | brevo.com |
-| `JWT_SECRET` | Random 64-char hex string | `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"` |
-| `CLIENT_URL` | Frontend URL | http://localhost:3000 |
-
-### Client (`client/.env.local`)
-
-| Variable | Description | Where to get |
-|---|---|---|
-| `NEXTAUTH_URL` | Your frontend URL | http://localhost:3000 |
-| `NEXTAUTH_SECRET` | Random 32-char string | `openssl rand -base64 32` |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID | console.cloud.google.com |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth secret | console.cloud.google.com |
-| `NEXT_PUBLIC_API_URL` | Server API URL | http://localhost:5000 |
-
----
-
-## Google OAuth Setup
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select existing
-3. Enable "Google+ API" or "Google Identity"
-4. Go to Credentials → Create Credentials → OAuth 2.0 Client ID
-5. Application type: **Web application**
-6. Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
-7. Copy Client ID and Client Secret to your `.env.local`
-
----
-
-## User Roles
-
-| Role | Access | Default redirect |
-|---|---|---|
-| `management_admin` | Full access, all modules | `/dashboard` |
-| `senior_manager` | Team-scoped, leave + performance | `/manager` |
-| `hr_recruiter` | Recruitment, candidates, interviews | `/recruiter` |
-| `employee` | Self-service portal only | `/employee` |
-
-First registered user gets `employee` role. Promote to admin via:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000
+AUTH_SECRET=<openssl rand -base64 32>
+AUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=<same as AUTH_SECRET>
+NEXTAUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
-PATCH /api/users/:id/role  { role: "management_admin" }
+
+### Server — `server/.env`
+
+```env
+PORT=5000
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET=
+CLIENT_URL=http://localhost:3000
+NODE_ENV=development
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+GROQ_API_KEY=
+HUGGINGFACE_API_KEY=
+BREVO_SMTP_USER=
+BREVO_SMTP_PASS=
+BREVO_FROM_EMAIL=noreply@yourdomain.com
+HIREFLOW_DOMAIN=hireflow.com
 ```
-Or directly in MongoDB: `db.users.updateOne({email: "you@email.com"}, {$set:{role:"management_admin"}})`
 
 ---
 
-## Deployment
+## 🌐 Deployment on Render
 
-### Server → Render
-1. Push `server/` to GitHub
-2. Create new Web Service on Render
-3. Build command: `npm install`
-4. Start command: `npm start`
-5. Add all env variables in Render dashboard
+**Server**
 
-### Client → Netlify
-1. Push `client/` to GitHub
-2. Create new site on Netlify
-3. Build command: `npm run build`
-4. Publish directory: `.next`
-5. Add all env variables in Netlify dashboard
-6. Update `NEXT_PUBLIC_API_URL` to your Render URL
-7. Update `NEXTAUTH_URL` to your Netlify URL
-8. Add Netlify URL to Google OAuth authorized redirect URIs
+| Setting | Value |
+|---------|-------|
+| Root directory | `server` |
+| Build command | `npm install` |
+| Start command | `node index.js` |
+| Node version | `20` |
+
+**Client**
+
+| Setting | Value |
+|---------|-------|
+| Root directory | `client` |
+| Build command | `npm install && npm run build` |
+| Start command | `npm start` |
+| Node version | `20` |
+
+> After deploying the client, update `CLIENT_URL` in the server's environment variables to the client Render URL and redeploy.
 
 ---
 
-## Features
+## 📁 Project Structure
 
-- 🤖 **AI Resume Screening** — Upload up to 20 PDFs, ranked by semantic similarity
-- 🎙️ **Voice & Video Interviews** — Browser-based with real-time transcription + AI scoring
-- 💰 **Automated Payroll** — One-click payroll run with PF/tax calculations
-- 📅 **Smart Attendance** — Clock in/out, monthly calendar heatmaps
-- 📋 **Leave Management** — Apply, approve/reject, configurable policies
-- 📈 **Performance Reviews** — 360° reviews, radar charts, goal tracking
-- 🔮 **Predictive Analytics** — Brain.js hire probability + flight risk scoring
-- 🤖 **HR AI Chatbot** — Groq-powered chatbot with real MongoDB context
-- 🎤 **Voice Assistant** — Microphone → AI response via speech synthesis
+```
+hireflow/
+├── client/                     # Next.js 14 frontend
+│   ├── app/
+│   │   ├── candidate-portal/   # Public job board + tracking
+│   │   ├── interview/[id]/     # AI interview room (no auth)
+│   │   ├── dashboard/          # Admin portal
+│   │   ├── manager/            # Sr. Manager portal
+│   │   ├── recruiter/          # HR Recruiter portal
+│   │   └── employee/           # Employee self-service
+│   ├── components/
+│   ├── lib/                    # axios, auth, utils
+│   └── store/
+│
+└── server/                     # Express REST API
+    ├── controllers/            # 15 domain controllers
+    ├── models/                 # 14 Mongoose models
+    ├── routes/                 # 16 route files
+    ├── services/               # AI, email, Cloudinary, payroll
+    ├── middleware/             # Auth, roles, sanitize, error
+    └── utils/                  # seed, employee helpers
+```
 
-## Tech Stack
+---
 
-**Frontend:** Next.js 14, TypeScript, TailwindCSS, Recharts, NextAuth v5, Zustand  
-**Backend:** Node.js, Express, MongoDB/Mongoose, Brain.js, pdf-parse  
-**AI:** Groq (llama-3.1-8b), HuggingFace (NER + embeddings), TF.js  
-**Storage:** Cloudinary (files + videos)  
-**Email:** Brevo SMTP via nodemailer
+<div align="center">
+
+Built with ❤️ for modern HR teams · HireFlow HRMS © 2025 · MIT License
+
+</div>
