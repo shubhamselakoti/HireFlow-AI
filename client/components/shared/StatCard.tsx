@@ -1,5 +1,5 @@
 'use client';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface StatCardProps {

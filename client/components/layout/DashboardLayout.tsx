@@ -1,10 +1,10 @@
 'use client';
-import { useAppStore } from '../../store/useAppStore';
-import { cn } from '../../lib/utils';
+import { useAppStore } from '@/store/useAppStore';
+import { cn } from '@/lib/utils';
 import AdminSidebar from './AdminSidebar';
 import RoleSidebar from './RoleSidebar';
 import TopNav from './TopNav';
-import HRChatbot from '../../components/shared/HRChatbot';
+import HRChatbot from '@/components/shared/HRChatbot';
 
 type LayoutRole = 'admin' | 'manager' | 'recruiter' | 'employee';
 

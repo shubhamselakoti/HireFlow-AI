@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User, Employee, ChatMessage } from '../types';
+import type { User, Employee, ChatMessage } from '@/types';
 
 interface AppState {
   // User

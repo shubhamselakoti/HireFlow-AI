@@ -1,59 +1,69 @@
-import { auth } from './lib/auth';
+import { auth } from '@/lib/auth';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
 export default auth((req) => {
   const { nextUrl, auth: session } = req as any;
   const pathname = nextUrl.pathname;
-
   const isLoggedIn = !!session?.user;
   const role = (session?.user as any)?.role;
 
-  // Public routes — always accessible
-  const publicRoutes = ['/', '/login', '/register', '/candidate-portal'];
-  const isPublic = publicRoutes.some((r) => pathname === r || pathname.startsWith('/candidate-portal'));
-  if (isPublic) return NextResponse.next();
+  // ── 1. Always-public routes — no auth, no redirects ─────────────────────
+  const isPublic =
+    pathname === '/' ||
+    pathname === '/login' ||
+    pathname === '/register' ||
+    pathname.startsWith('/candidate-portal') ||
+    pathname.startsWith('/interview/');
 
-  // Auth required for all other routes
+  if (isPublic) {
+    // If already logged in and hitting /login or /register, redirect to their home
+    if (isLoggedIn && (pathname === '/login' || pathname === '/register')) {
+      return NextResponse.redirect(new URL(getRoleHome(role), req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // ── 2. Not logged in — send to login ────────────────────────────────────
   if (!isLoggedIn) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    const loginUrl = new URL('/login', req.url);
+    loginUrl.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Role-based access
-  if (pathname.startsWith('/dashboard')) {
-    if (role !== 'management_admin') {
-      return NextResponse.redirect(new URL(getRoleRedirect(role), req.url));
-    }
+  // ── 3. Candidates — can only access /candidate-portal (already public) ──
+  // If a candidate somehow navigates to a staff route, send them home
+  if (role === 'candidate') {
+    return NextResponse.redirect(new URL('/candidate-portal', req.url));
   }
 
-  if (pathname.startsWith('/manager')) {
-    if (role !== 'senior_manager') {
-      return NextResponse.redirect(new URL(getRoleRedirect(role), req.url));
-    }
+  // ── 4. Staff role guards ─────────────────────────────────────────────────
+  if (pathname.startsWith('/dashboard') && role !== 'management_admin') {
+    return NextResponse.redirect(new URL(getRoleHome(role), req.url));
   }
 
-  if (pathname.startsWith('/recruiter')) {
-    if (role !== 'hr_recruiter') {
-      return NextResponse.redirect(new URL(getRoleRedirect(role), req.url));
-    }
+  if (pathname.startsWith('/manager') && role !== 'senior_manager') {
+    return NextResponse.redirect(new URL(getRoleHome(role), req.url));
   }
 
-  if (pathname.startsWith('/employee')) {
-    if (role !== 'employee') {
-      return NextResponse.redirect(new URL(getRoleRedirect(role), req.url));
-    }
+  if (pathname.startsWith('/recruiter') && role !== 'hr_recruiter') {
+    return NextResponse.redirect(new URL(getRoleHome(role), req.url));
+  }
+
+  if (pathname.startsWith('/employee') && role !== 'employee') {
+    return NextResponse.redirect(new URL(getRoleHome(role), req.url));
   }
 
   return NextResponse.next();
 });
 
-function getRoleRedirect(role: string): string {
+function getRoleHome(role: string): string {
   switch (role) {
     case 'management_admin': return '/dashboard';
-    case 'senior_manager': return '/manager';
-    case 'hr_recruiter': return '/recruiter';
-    case 'employee': return '/employee';
-    default: return '/login';
+    case 'senior_manager':   return '/manager';
+    case 'hr_recruiter':     return '/recruiter';
+    case 'employee':         return '/employee';
+    case 'candidate':        return '/candidate-portal';
+    default:                 return '/login';
   }
 }
 

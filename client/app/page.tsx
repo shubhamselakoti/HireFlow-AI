@@ -1,15 +1,32 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import {
   Menu, X, ArrowRight, Play, Star, Twitter, Linkedin, Github,
   CheckCircle, Zap, Users, BarChart3, Calendar, DollarSign,
-  Brain, Mic, ChevronRight, Sparkles
+  Brain, Mic, ChevronRight, Sparkles, Briefcase
 } from 'lucide-react';
+
+function getRoleHome(role: string): string {
+  switch (role) {
+    case 'management_admin': return '/dashboard';
+    case 'senior_manager':   return '/manager';
+    case 'hr_recruiter':     return '/recruiter';
+    case 'employee':         return '/employee';
+    case 'candidate':        return '/candidate-portal';
+    default:                 return '/login';
+  }
+}
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
+  const role = (session?.user as any)?.role;
+  const dashboardHref = isLoggedIn ? getRoleHome(role) : '/login';
+
   return (
     <nav className="sticky top-0 z-50 bg-clay-bg/80 backdrop-blur-xl border-b border-white/60">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -23,27 +40,31 @@ function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
-          {['Features', 'Pricing', 'About', 'Login'].map((item) => (
-            <Link
-              key={item}
-              href={item === 'Login' ? '/login' : `#${item.toLowerCase()}`}
-              className="text-clay-muted font-600 text-sm hover:text-clay-text transition-colors"
-            >
-              {item}
-            </Link>
-          ))}
+          <a href="#features" className="text-clay-muted font-600 text-sm hover:text-clay-text transition-colors">Features</a>
+          <Link href="/candidate-portal" className="text-clay-muted font-600 text-sm hover:text-clay-text transition-colors">Browse Jobs</Link>
+          {!isLoggedIn && (
+            <Link href="/login" className="text-clay-muted font-600 text-sm hover:text-clay-text transition-colors">Login</Link>
+          )}
         </div>
 
         {/* CTA */}
         <div className="hidden md:block">
-          <Link href="/register">
-            <button className="clay-btn clay-btn-primary px-6 py-2.5 text-sm font-700 text-white">
-              Get Started Free
-            </button>
-          </Link>
+          {isLoggedIn ? (
+            <Link href={dashboardHref}>
+              <button className="clay-btn clay-btn-primary px-6 py-2.5 text-sm font-700 text-white">
+                Go to Dashboard →
+              </button>
+            </Link>
+          ) : (
+            <Link href="/register">
+              <button className="clay-btn clay-btn-primary px-6 py-2.5 text-sm font-700 text-white">
+                Get Started Free
+              </button>
+            </Link>
+          )}
         </div>
 
-        {/* Mobile */}
+        {/* Mobile toggle */}
         <button className="md:hidden text-clay-muted" onClick={() => setOpen(!open)}>
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -52,17 +73,24 @@ function Navbar() {
       {/* Mobile menu */}
       {open && (
         <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-clay-lavender/30 px-6 py-4 space-y-3">
-          {['Features', 'Pricing', 'About'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="block text-clay-muted font-600 py-2">
-              {item}
-            </a>
-          ))}
-          <Link href="/login" className="block text-clay-muted font-600 py-2">Login</Link>
-          <Link href="/register">
-            <button className="clay-btn clay-btn-primary w-full py-3 text-sm font-700 text-white mt-2">
-              Get Started Free
-            </button>
-          </Link>
+          <a href="#features" className="block text-clay-muted font-600 py-2">Features</a>
+          <Link href="/candidate-portal" className="block text-clay-muted font-600 py-2">Browse Jobs</Link>
+          {isLoggedIn ? (
+            <Link href={dashboardHref}>
+              <button className="clay-btn clay-btn-primary w-full py-3 text-sm font-700 text-white mt-2">
+                Go to Dashboard →
+              </button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="block text-clay-muted font-600 py-2">Login</Link>
+              <Link href="/register">
+                <button className="clay-btn clay-btn-primary w-full py-3 text-sm font-700 text-white mt-2">
+                  Get Started Free
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       )}
     </nav>
@@ -137,10 +165,12 @@ function Hero() {
                   <ArrowRight size={18} strokeWidth={2.5} />
                 </button>
               </Link>
-              <button className="clay-btn clay-btn-outline px-8 py-3.5 text-base font-700 flex items-center gap-2">
-                <Play size={16} strokeWidth={2.5} className="fill-current" />
-                Watch Demo
-              </button>
+              <Link href="/candidate-portal">
+                <button className="clay-btn clay-btn-outline px-8 py-3.5 text-base font-700 flex items-center gap-2">
+                  <Briefcase size={16} strokeWidth={2.5} />
+                  Browse Open Jobs
+                </button>
+              </Link>
             </div>
 
             {/* Social proof */}
@@ -361,8 +391,8 @@ function HowItWorks() {
 function Testimonials() {
   const testimonials = [
     { name: 'Priya Sharma', role: 'Head of HR', company: 'TechNova India', avatar: '👩🏽', quote: 'HireFlow cut our time-to-hire by 60%. The AI resume screener is genuinely magic — what took our team 2 days now takes 10 minutes.' },
-    // { name: 'James O'Brien', role: 'People Ops Lead', company: 'Finrise Global', avatar: '👨🏻', quote: 'The payroll automation alone saves us 3 full days every month. The claymorphism UI is so refreshing — our managers actually enjoy using it.' },
-    // { name: 'Aisha Mensah', role: 'CHRO', company: 'BuildCo Africa', avatar: '👩🏿', quote: 'We manage 1,200 employees across 4 countries. HireFlow is the first HRMS that handles our complexity without feeling overwhelming.' },
+    { name: "James O'Brien", role: 'People Ops Lead', company: 'Finrise Global', avatar: '👨🏻', quote: 'The payroll automation alone saves us 3 full days every month. The claymorphism UI is so refreshing — our managers actually enjoy using it.' },
+    { name: 'Aisha Mensah', role: 'CHRO', company: 'BuildCo Africa', avatar: '👩🏿', quote: 'We manage 1,200 employees across 4 countries. HireFlow is the first HRMS that handles our complexity without feeling overwhelming.' },
   ];
   return (
     <section className="py-24 px-6">

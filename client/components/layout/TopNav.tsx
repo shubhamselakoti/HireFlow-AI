@@ -1,8 +1,8 @@
 'use client';
-import { useAppStore } from '../../store/useAppStore';
+import { useAppStore } from '@/store/useAppStore';
 import { Menu, Mic, Bell, Search } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 
 interface TopNavProps {
   title?: string;
@@ -30,7 +30,7 @@ export default function TopNav({ title, subtitle }: TopNavProps) {
       const text = event.results[0][0].transcript;
       setIsListening(false);
       try {
-        const { default: api } = await import('../../lib/axios');
+        const { default: api } = await import('@/lib/axios');
         const res = await api.post('/api/ai/voice-chat', { text });
         const reply = res.data.data.reply;
         if ('speechSynthesis' in window) {

@@ -2,18 +2,20 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { cn } from '../../lib/utils';
-import { useAppStore } from '../../store/useAppStore';  
+import { cn } from '@/lib/utils';
+import { useAppStore } from '@/store/useAppStore';
 import {
   LayoutDashboard, Users, Briefcase, Calendar, DollarSign,
   BarChart3, Settings, LogOut, Menu, X, ClipboardList,
-  TrendingUp, ChevronRight, Bell,
+  TrendingUp, ChevronRight, Bell, GitMerge, CalendarCheck,
 } from 'lucide-react';
 
 const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', bg: 'bg-clay-lavender', color: 'text-clay-purple' },
-  { href: '/dashboard/employees', icon: Users, label: 'Employees', bg: 'bg-clay-peach', color: 'text-orange-600' },
+  { href: '/dashboard',                                  icon: LayoutDashboard, label: 'Dashboard',   bg: 'bg-clay-lavender', color: 'text-clay-purple' },
+  { href: '/dashboard/employees',                        icon: Users,           label: 'Employees',   bg: 'bg-clay-peach',    color: 'text-orange-600'  },
   { href: '/dashboard/recruitment', icon: Briefcase, label: 'Recruitment', bg: 'bg-clay-mint', color: 'text-green-600' },
+  { href: '/dashboard/recruitment/applications', icon: GitMerge, label: 'Pipeline', bg: 'bg-clay-mint', color: 'text-teal-600' },
+  { href: '/dashboard/recruitment/interviews', icon: CalendarCheck, label: 'Interviews', bg: 'bg-clay-sky', color: 'text-blue-600' },
   { href: '/dashboard/attendance', icon: Calendar, label: 'Attendance', bg: 'bg-clay-sky', color: 'text-blue-600' },
   { href: '/dashboard/leave', icon: ClipboardList, label: 'Leave', bg: 'bg-clay-rose', color: 'text-pink-600' },
   { href: '/dashboard/payroll', icon: DollarSign, label: 'Payroll', bg: 'bg-clay-yellow', color: 'text-yellow-600' },
