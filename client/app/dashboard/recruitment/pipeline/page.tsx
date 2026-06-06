@@ -1,4 +1,5 @@
 'use client';
+import { getDownloadUrl } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -289,11 +290,5 @@ export default function PipelinePage() {
 }
 
 /** Convert a Cloudinary URL to a forced-download URL */
-function getDownloadUrl(url: string): string {
-  if (!url) return '#';
-  if (url.includes('cloudinary.com')) {
-    // Insert fl_attachment into the transformation segment
-    return url.replace('/upload/', '/upload/fl_attachment/');
-  }
   return url;
 }

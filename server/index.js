@@ -29,6 +29,7 @@ const performanceRoutes= require('./routes/performance.routes');
 const analyticsRoutes  = require('./routes/analytics.routes');
 const aiRoutes         = require('./routes/ai.routes');
 const onboardingRoutes = require('./routes/onboarding.routes');
+const filesRoutes      = require('./routes/files.routes');
 
 const app = express();
 
@@ -69,6 +70,7 @@ app.use('/api/performance', performanceRoutes);
 app.use('/api/analytics',   analyticsRoutes);
 app.use('/api/ai',          aiRoutes);
 app.use('/api/onboarding',  onboardingRoutes);
+app.use('/api/files',       filesRoutes);
 
 app.use('/api/*', (_req, res) => {
   res.status(404).json({ success: false, message: 'API endpoint not found' });

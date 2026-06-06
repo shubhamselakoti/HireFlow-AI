@@ -1,4 +1,5 @@
 'use client';
+import { getDownloadUrl } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -25,11 +26,6 @@ const NEXT_STATUS: Record<string, string> = {
   offered:             'hired',
 };
 
-const getDownloadUrl = (url: string) => {
-  if (!url) return url;
-  if (url.includes('cloudinary.com')) return url.replace('/upload/', '/upload/fl_attachment/');
-  return url;
-};
 
 export default function ApplicationsPage() {
   const searchParams = useSearchParams();
@@ -241,8 +237,7 @@ export default function ApplicationsPage() {
                         {/* Resume download */}
                         {cand?.resumeUrl && (
                           <a
-                            href={getDownloadUrl(cand.resumeUrl)}
-                            download
+                            href={getDownloadUrl(cand.resumeUrl, `resume_${(cand.name || 'candidate').replace(/\s+/g, '_')}`)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1.5 text-xs text-clay-purple font-700 bg-clay-lavender/60 px-3 py-2 rounded-pill hover:bg-clay-lavender transition-colors flex-shrink-0"

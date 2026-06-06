@@ -1,4 +1,5 @@
 'use client';
+import { getDownloadUrl } from '@/lib/utils';
 import { useEffect, useState, useRef } from 'react';
 import { Upload, Search, Brain, Download, Loader2, FileText, X, Eye } from 'lucide-react';
 import { toast } from 'sonner';
@@ -9,13 +10,7 @@ import type { Candidate, Job } from '@/types';
 const SCORE_BADGE = (score: number) =>
   score >= 70 ? 'badge-mint' : score >= 40 ? 'badge-yellow' : 'badge-rose';
 
-/** Force-download a Cloudinary PDF by appending fl_attachment */
-const getDownloadUrl = (url: string) => {
-  if (!url) return url;
-  // Cloudinary raw/upload URL → add fl_attachment before version or file
-  if (url.includes('cloudinary.com')) {
-    return url.replace('/upload/', '/upload/fl_attachment/');
-  }
+
   return url;
 };
 
@@ -339,8 +334,7 @@ export default function CandidatesPage() {
                   <td className="px-4 py-3">
                     {c.resumeUrl ? (
                       <a
-                        href={getDownloadUrl(c.resumeUrl)}
-                        download
+                        href={getDownloadUrl(c.resumeUrl, `resume_${c.name.replace(/\s+/g, '_')}`)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs text-clay-purple font-700 hover:underline bg-clay-lavender/40 px-2.5 py-1.5 rounded-pill transition-colors hover:bg-clay-lavender"
