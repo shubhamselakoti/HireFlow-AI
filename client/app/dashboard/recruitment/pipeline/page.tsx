@@ -1,6 +1,6 @@
 'use client';
 import { getDownloadUrl } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ArrowLeft, ArrowRight, Users, CheckCircle, XCircle, ChevronRight, Loader2, UserPlus, FileText } from 'lucide-react';
@@ -29,6 +29,14 @@ const SCORE_COLOR = (score: number) =>
   score >= 70 ? 'badge-mint' : score >= 40 ? 'badge-yellow' : 'badge-rose';
 
 export default function PipelinePage() {
+  return (
+    <Suspense fallback={<div className="p-8 space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="clay-skeleton h-28 rounded-2xl" />)}</div>}>
+      <PipelineContent />
+    </Suspense>
+  );
+}
+
+function PipelineContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const jobId = searchParams.get('jobId');

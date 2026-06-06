@@ -1,6 +1,6 @@
 'use client';
 import { getDownloadUrl } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { ChevronRight, Download, Loader2 } from 'lucide-react';
@@ -28,6 +28,14 @@ const NEXT_STATUS: Record<string, string> = {
 
 
 export default function ApplicationsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="clay-skeleton h-24 rounded-2xl" />)}</div>}>
+      <ApplicationsContent />
+    </Suspense>
+  );
+}
+
+function ApplicationsContent() {
   const searchParams = useSearchParams();
   const jobIdParam = searchParams.get('jobId');
 
