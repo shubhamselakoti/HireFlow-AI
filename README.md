@@ -25,27 +25,18 @@ Built with a claymorphism design system, Next.js 14 App Router, Node.js/Express 
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture & Workflow
 
-```
-┌─────────────────────────────┐        ┌─────────────────────────────┐
-│         CLIENT              │        │          SERVER              │
-│  Next.js 14 (App Router)    │◄──────►│  Node.js + Express REST API │
-│  TypeScript + Tailwind CSS  │  HTTP  │  Mongoose ODM               │
-│  NextAuth v5 (JWT + OAuth)  │        │  JWT Authentication          │
-│  Zustand + React Hook Form  │        │  Multer + Cloudinary         │
-│  Recharts + Sonner          │        │  Nodemailer + Brevo SMTP     │
-│                             │        │                              │
-│  Deploy: Render (Node SSR)  │        │  Deploy: Render              │
-└─────────────────────────────┘        └──────────┬──────────────────┘
-                                                   │
-                              ┌────────────────────┼────────────────────┐
-                              │                    │                    │
-                    ┌─────────▼──────┐  ┌──────────▼──────┐  ┌────────▼────────┐
-                    │  MongoDB Atlas │  │   Groq LLaMA    │  │   Cloudinary    │
-                    │  (Database)    │  │   + HuggingFace │  │   (File Store)  │
-                    └────────────────┘  └─────────────────┘  └─────────────────┘
-```
+<div align="center">
+  <img src="hireflow_architecture_workflow.svg" alt="HireFlow Architecture and Workflow Diagram" width="100%" />
+</div>
+
+The diagram above covers:
+- **System architecture** — client/server split, third-party services (MongoDB, Cloudinary, Groq, Brevo)
+- **User roles** — all 5 roles with portal paths and permission scope
+- **Hiring workflow** — 7-step journey from job posted → hired → employee auto-created
+- **Employee lifecycle** — onboarding → attendance → leave → payroll → performance
+- **API surface** — all 16 route groups mapped to the Express server
 
 ---
 
@@ -65,22 +56,21 @@ Built with a claymorphism design system, Next.js 14 App Router, Node.js/Express 
 
 ### 📅 Attendance & Leave
 - Clock in / clock out with daily records
-- Configurable leave policies (Casual, Sick, Annual, Maternity, Paternity, Unpaid) seeded automatically on first server start
-- Leave application with balance validation
-- Manager approval workflow with email notifications
+- Configurable leave policies (Casual, Sick, Annual, Maternity, Paternity, Unpaid) — seeded automatically on first server start
+- Leave application with balance validation and manager approval
+- Email notifications via Brevo HTTP API
 
 ### 💰 Payroll
 - One-click monthly payroll run
-- Attendance-adjusted calculations
-- Payslips emailed automatically via Brevo SMTP
+- Attendance-adjusted gross/net salary calculations
+- Payslips emailed automatically
 - Historical payslip viewer for employees
 
 ### 📊 Analytics & Performance
 - Recruitment funnel charts
 - Attendance trend graphs
 - Payroll cost summaries by department
-- Performance rating distributions
-- Goal tracking per employee
+- Performance rating distributions and goal tracking
 
 ---
 
@@ -99,19 +89,21 @@ Built with a claymorphism design system, Next.js 14 App Router, Node.js/Express 
 ## 🔄 Hiring Flow
 
 ```
-Candidate applies (resume upload)
+Candidate applies (resume upload — no login required)
         ↓
-AI screens resume → score 0–100
+AI screens resume → score 0–100 via Groq + HuggingFace
         ↓
 HR advances through pipeline:
 Applied → Screened → Interview Scheduled → Interviewed → Offered → Hired
         ↓
-On "Hired":
+AI interview room (voice, browser-based, scored per answer)
+        ↓
+On "Hired" — automatically:
   ✅ Employee record created
   ✅ User account created (firstname.lastname@hireflow.com)
-  ✅ Temp password generated & hashed
+  ✅ Temp password generated & bcrypt-hashed
   ✅ Onboarding checklist created
-  ✅ Credentials email sent to candidate
+  ✅ Credentials email sent via Brevo API
 ```
 
 ---
@@ -126,14 +118,15 @@ On "Hired":
 
 **Backend**
 - Node.js + Express + express-async-errors
-- Mongoose (MongoDB ODM)
+- Mongoose ODM (14 models, 16 route files, 15 controllers)
 - bcryptjs + jsonwebtoken
-- Multer + pdf-parse, Nodemailer + Brevo SMTP
+- Multer + pdf-parse, cookie-parser
 
 **AI & Cloud**
 - Groq (LLaMA 3.1 8B) — JD generation, answer evaluation, HR chatbot
 - HuggingFace NER — skill extraction from resumes
-- Cloudinary — resume and document storage (streamed via backend proxy)
+- Cloudinary — resume/document storage (streamed via backend proxy)
+- Brevo HTTP API — transactional emails
 - MongoDB Atlas — database
 
 ---
@@ -141,22 +134,22 @@ On "Hired":
 ## 🚀 Getting Started
 
 ### Prerequisites
-Node.js 20+, MongoDB Atlas, Cloudinary, Groq API key, Brevo SMTP, Google Cloud OAuth
+Node.js 20+, MongoDB Atlas, Cloudinary, Groq API key, Brevo account, Google Cloud OAuth credentials
 
 ### Server
 ```bash
 cd server
 npm install
-cp .env.example .env
-npm run dev           # http://localhost:5000
+cp .env.example .env    # fill in your values
+npm run dev             # http://localhost:5000
 ```
 
 ### Client
 ```bash
 cd client
 npm install
-cp .env.local.example .env.local
-npm run dev           # http://localhost:3000
+cp .env.local.example .env.local    # fill in your values
+npm run dev                          # http://localhost:3000
 ```
 
 ---
@@ -180,17 +173,22 @@ GOOGLE_CLIENT_SECRET=
 ```env
 PORT=5000
 MONGODB_URI=mongodb+srv://...
-JWT_SECRET=
+JWT_SECRET=<random secret>
 CLIENT_URL=http://localhost:3000
 NODE_ENV=development
+
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
+
 GROQ_API_KEY=
 HUGGINGFACE_API_KEY=
-BREVO_SMTP_USER=
-BREVO_SMTP_PASS=
+
+BREVO_API_KEY=              # preferred — Brevo HTTP API (works on all cloud hosts)
+BREVO_SMTP_USER=            # fallback only
+BREVO_SMTP_PASS=            # fallback only
 BREVO_FROM_EMAIL=noreply@yourdomain.com
+
 HIREFLOW_DOMAIN=hireflow.com
 ```
 
@@ -216,7 +214,7 @@ HIREFLOW_DOMAIN=hireflow.com
 | Start command | `npm start` |
 | Node version | `20` |
 
-> After deploying the client, update `CLIENT_URL` in the server's environment variables to the client Render URL and redeploy.
+> After deploying the client, update `CLIENT_URL` in the server's environment variables to the client Render URL and redeploy the server.
 
 ---
 
@@ -224,10 +222,13 @@ HIREFLOW_DOMAIN=hireflow.com
 
 ```
 hireflow/
+├── hireflow_architecture_workflow.svg   ← architecture diagram
+├── README.md
+│
 ├── client/                     # Next.js 14 frontend
 │   ├── app/
 │   │   ├── candidate-portal/   # Public job board + tracking
-│   │   ├── interview/[id]/     # AI interview room (no auth)
+│   │   ├── interview/[id]/     # AI interview room (no auth required)
 │   │   ├── dashboard/          # Admin portal
 │   │   ├── manager/            # Sr. Manager portal
 │   │   ├── recruiter/          # HR Recruiter portal
